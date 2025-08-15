@@ -20,11 +20,11 @@ public class Reservation {
     @Column(name = "time_to", nullable = false)
     private Timestamp time_to;
 
+    @Column(name = "user_id")
+    private Integer user_id;
+
     @Column(name = "parking_space_id")
     private Integer parking_space_id;
-
-    @Column(name = "car_id")
-    private Integer car_id;
 
     public int getId(){
         return id;
@@ -51,19 +51,19 @@ public class Reservation {
     }
 
     // foreign key ?
+    public int getUserId(){
+        return user_id;
+    }
+
+    public void setUserId(Integer user_id){
+        this.user_id = user_id;
+    }
+
     public int getParkingSpaceId(){
         return parking_space_id;
     }
 
-    public void setOwnerId(Integer parking_space_id){
+    public void setParkingSpaceId(Integer parking_space_id){
         this.parking_space_id = parking_space_id;
-    }
-
-    public int getCarId(){
-        return car_id;
-    }
-
-    public void setCarId(Integer car_id){
-        this.car_id = car_id;
     }
 }

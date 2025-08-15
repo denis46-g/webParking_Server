@@ -38,7 +38,7 @@ public class ParkingSpace {
         return is_occupied;
     }
 
-    public void setLicensePlate(boolean is_occupied){
+    public void setIsOccupied(boolean is_occupied){
         this.is_occupied = is_occupied;
     }
 }
