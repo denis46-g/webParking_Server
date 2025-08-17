@@ -101,6 +101,20 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new Response(false, "Время от и до должно быть будущим"));
 
+        final List<Reservation> thisParkingPlaceReservations = reservationService.readAll();
+        if(thisParkingPlaceReservations!=null){
+            thisParkingPlaceReservations.removeIf(r -> r.getParkingSpaceId() != parkingSpaceId);
+            for(Reservation reservation : thisParkingPlaceReservations){
+                if(reservation.getTimeFrom().before(timeFrom) && reservation.getTimeTo().after(timeFrom)||
+                        reservation.getTimeFrom().before(timeTo) && reservation.getTimeTo().after(timeTo)){
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(new Response(false, "Это время уже забронировано"));
+                }
+            }
+        }
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+
         Reservation r = new Reservation();
         r.setParkingSpaceId(parkingSpaceId);
         r.setTimeFrom(timeFrom);
@@ -110,5 +124,15 @@ public class ReservationController {
         reservationService.create(r);
 
         return ResponseEntity.ok(new Response(true, "Парковочное место забронировано"));
+    }
+
+    @GetMapping(value="/parking_spaces/{id}/reservs")
+    public ResponseEntity<List<Reservation>> readThisParkingSpaceReservations(@PathVariable(name = "id") int id){
+        final List<Reservation> reservs = reservationService.readAll();
+        if(reservs != null) {
+            reservs.removeIf(r -> r.getParkingSpaceId()!= id);
+            return new ResponseEntity<>(reservs, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
